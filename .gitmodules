@@ -1,0 +1,44 @@
+[submodule "aevo-hub"]
+	path = aevo-hub
+	url = https://github.com/chakkaphanjayc/aevo-hub.git
+	branch = main
+[submodule "aevo-go"]
+	path = aevo-go
+	url = https://github.com/chakkaphanjayc/aevo-go.git
+	branch = main
+[submodule "aevo-play"]
+	path = aevo-play
+	url = https://github.com/chakkaphanjayc/aevo-play.git
+	branch = production
+[submodule "aevo-pos"]
+	path = aevo-pos
+	url = https://github.com/chakkaphanjayc/aevo-pos.git
+	branch = main
+[submodule "aevo-accounts"]
+	path = aevo-accounts
+	url = https://github.com/chakkaphanjayc/aevo-accounts.git
+	branch = main
+[submodule "aevo-admin"]
+	path = aevo-admin
+	url = https://github.com/chakkaphanjayc/aevo-admin.git
+	branch = main
+[submodule "aevo-background-worker"]
+	path = aevo-background-worker
+	url = https://github.com/chakkaphanjayc/aevo-background-worker.git
+	branch = main
+[submodule "aevo-contracts"]
+	path = aevo-contracts
+	url = https://github.com/chakkaphanjayc/aevo-contracts.git
+	branch = main
+[submodule "aevo-core-api"]
+	path = aevo-core-api
+	url = https://github.com/chakkaphanjayc/aevo-core-api.git
+	branch = main
+[submodule "aevo-edge-gateway"]
+	path = aevo-edge-gateway
+	url = https://github.com/chakkaphanjayc/aevo-edge-gateway.git
+	branch = main
+[submodule "aevo-infrastructure"]
+	path = aevo-infrastructure
+	url = https://github.com/chakkaphanjayc/aevo-infrastructure.git
+	branch = main

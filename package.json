@@ -39,7 +39,12 @@
     "benchmark:auth-cache": "bun --env-file=aevo-hub/.env run scripts/benchmark-auth-cache.ts",
     "test:all": "bun run scripts/test-all.ts",
     "test:integration": "bun run scripts/test-all.ts --integration",
-    "test:tenant-security": "bun run scripts/test-tenant-security.ts"
+    "test:tenant-security": "bun run scripts/test-tenant-security.ts",
+    "sub:init": "git submodule update --init --recursive",
+    "sub:update": "git submodule update --remote --merge",
+    "sub:status": "git submodule foreach 'git status -s'",
+    "sub:checkout-main": "git submodule foreach 'git checkout main || git checkout production || true'",
+    "sub:pull": "git submodule foreach 'git pull origin $(git rev-parse --abbrev-ref HEAD)'"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0"
