@@ -1,0 +1,71 @@
+{
+  "schema": "aevocado.hub-baseline.contracts",
+  "inventoryVersion": 2,
+  "batch": "HUB-006",
+  "generatedAt": "2026-09-25",
+  "entries": [
+    {
+      "boundary": "Core Hub C# contract",
+      "repository": "aevo-core-api",
+      "source": "src/Aevo.CoreApi/Contracts/HubApiContracts.cs",
+      "routeCount": 49,
+      "implementedRouteCount": 49,
+      "implementationStatus": "ready",
+      "notes": "ImplementedRoutes is assigned to Routes; this is an internal self-declaration rather than a comparison against handler extraction."
+    },
+    {
+      "boundary": "Core Hub runtime normalized handlers",
+      "repository": "aevo-core-api",
+      "source": "src/Aevo.CoreApi/HubApiEndpoints.cs",
+      "routeCount": 49,
+      "implementationStatus": "runtime observed",
+      "notes": "Route placeholders use .NET {id:guid}; normalized comparison is required before contract synchronization."
+    },
+    {
+      "boundary": "aevo-contracts TypeScript Hub route list",
+      "repository": "aevo-contracts",
+      "source": "src/index.ts and src/hub.ts",
+      "routeCount": 49,
+      "implementationStatus": "typed",
+      "notes": "Matches the C# list textually using colon placeholders, not the OpenAPI paths."
+    },
+    {
+      "boundary": "OpenAPI v1",
+      "repository": "aevo-contracts",
+      "source": "openapi/v1.json",
+      "pathCount": 76,
+      "hubPathCount": 47,
+      "hubImplementedCount": 49,
+      "implementationStatus": "synchronized",
+      "notes": "Generated from Core Hub route sources by scripts/sync-hub-openapi.ts; internal and public paths are included in the total."
+    },
+    {
+      "boundary": "Admin client",
+      "repository": "aevo-admin",
+      "source": "apps/admin/app/lib/auth.server.ts and route modules",
+      "implementationStatus": "uses @aevocado/contracts for shared client but retains local UI/domain types",
+      "status": "PARTIAL_DUPLICATION"
+    },
+    {
+      "boundary": "POS client/contracts",
+      "repository": "aevo-pos",
+      "source": "packages/contracts/src/index.ts and apps/api/src/app.ts",
+      "implementationStatus": "app-local contract with /api/v1/hub overlap",
+      "status": "TRANSITIONAL_DUPLICATION"
+    },
+    {
+      "boundary": "Play client/contracts",
+      "repository": "aevo-play",
+      "source": "packages/contracts, apps/api/src/app.ts",
+      "implementationStatus": "app-local contract and session/db adapter",
+      "status": "TRANSITIONAL_DUPLICATION"
+    }
+  ],
+  "comparison": {
+    "actualCoreHubHandlersComparedToCSharpContract": "normalized route extraction is synchronized through the versioned artifact; the 49-entry contract includes two /api/v1/me routes and 47 unique /api/v1/hub path keys",
+    "routesMissingFromOpenApi": "none for the 49 synchronized Hub route entries",
+    "contractRoutesMissingFromRuntime": "none proven after placeholder normalization",
+    "canonicalContractCandidate": "aevo-contracts released version plus Core-owned route inventory",
+    "status": "SYNCHRONIZED_IN_DEVELOPMENT"
+  }
+}

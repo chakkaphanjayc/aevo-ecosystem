@@ -1,0 +1,107 @@
+{
+  "schema": "aevocado.hub-baseline.redundancy",
+  "inventoryVersion": 1,
+  "batch": "BATCH-HUB-000",
+  "generatedAt": "2026-09-24",
+  "entries": [
+    {
+      "surface": "Public gateway",
+      "evidence": ["aevo-edge-gateway/src/index.ts", "aevo-hub/README.md", "aevo-hub/apps/gateway absent from runtime"],
+      "currentConsumers": ["Hub modern", "Go", "Admin edge/BFF path"],
+      "replacementCandidate": "aevo-edge-gateway -> aevo-core-api",
+      "risk": "legacy references can resurrect a second gateway",
+      "classification": "KEEP_BUT_NARROW",
+      "recommendedLifecycle": "keep Edge; remove references only after HUB-001 evidence"
+    },
+    {
+      "surface": "Hub legacy gateway/adapter",
+      "evidence": ["aevo-hub README says apps/gateway removed", "aevo-hub/scripts/auth-migration-check.ts still scans for it", "old docs/ADR references"],
+      "currentConsumers": ["no supported runtime consumer found"],
+      "replacementCandidate": "Core/Edge/Accounts",
+      "risk": "hidden old client or migration tooling dependency",
+      "classification": "REMOVED_AND_GUARDED",
+      "recommendedLifecycle": "deleted; auth and migration checks fail if the surface returns"
+    },
+    {
+      "surface": "Migration authority",
+      "evidence": ["aevo-core-api/db/migrations", "aevo-hub/supabase/migrations", "aevo-pos/supabase/migrations", "aevo-play/supabase/migrations"],
+      "currentConsumers": ["Core migrator for control-plane schema", "POS/Play app-owned domain migration pipelines"],
+      "replacementCandidate": "Core/Infrastructure table-by-table authority",
+      "risk": "shared DDL/data divergence and unknown writers",
+      "classification": "CORE_AUTHORITY_WITH_APP_DOMAIN_MIGRATIONS",
+      "recommendedLifecycle": "Core owns control-plane DDL; app trees retain only app-domain migrations"
+    },
+    {
+      "surface": "Application registry/catalog",
+      "evidence": ["aevo_application_registry", "public.application_registry", "public.apps", "Hub hard-coded app lists", "Admin registry UI"],
+      "currentConsumers": ["Core HubDataStore", "Hub store/settings UI", "Admin", "POS/Play Core adapters"],
+      "replacementCandidate": "Core registry plus declarative manifest contract",
+      "risk": "different display, launch, entitlement, and location-enable metadata",
+      "classification": "CANONICALIZED_CORE_REGISTRY",
+      "recommendedLifecycle": "Core aevo_application_registry is authoritative; public registry/catalog tables retired"
+    },
+    {
+      "surface": "Session authority",
+      "evidence": ["Core aevo_app_sessions", "POS packages/auth/application-session.ts", "Play packages/auth/application-session.ts", "Accounts Core issue/revoke"],
+      "currentConsumers": ["Core", "Accounts", "POS", "Play"],
+      "replacementCandidate": "Core session store with app adapters",
+      "risk": "two session stores/revocation semantics",
+      "classification": "CANONICALIZED_CORE_SESSION",
+      "recommendedLifecycle": "Core aevo_app_sessions is authoritative; local app session managers and public app_sessions retired"
+    },
+    {
+      "surface": "Entitlement stores/evaluators",
+      "evidence": ["public.app_subscriptions", "public.subscriptions", "public.plan_entitlements", "public.organization_entitlements", "Core HubDataStore", "POS subscription/billing repositories"],
+      "currentConsumers": ["Core Hub routes", "Admin read UI", "Hub UI", "POS/Play Core adapters"],
+      "replacementCandidate": "verified billing event -> Core entitlement projection",
+      "risk": "trial/manual/dev access may bypass billing truth",
+      "classification": "CANONICALIZED_CORE_ENTITLEMENTS",
+      "recommendedLifecycle": "Core projections are authoritative; public catalog/subscription/entitlement compatibility tables retired"
+    },
+    {
+      "surface": "Organization/store writers",
+      "evidence": ["Core HubDataStore INSERT/UPDATE", "POS packages/db/organizations.ts upserts", "Play seed/repository", "multiple migration trees"],
+      "currentConsumers": ["Core", "POS", "Play", "Supabase roles/RLS"],
+      "replacementCandidate": "Core write authority with app read/projection adapters",
+      "risk": "unsafe multi-writer and identity/store ID divergence",
+      "classification": "CONSOLIDATE",
+      "recommendedLifecycle": "HUB-005 table-by-table; not executed"
+    },
+    {
+      "surface": "Old local port/origin",
+      "evidence": ["aevo-edge-gateway/src/index.ts", "aevo-edge-gateway/.env.example", "aevo-edge-gateway/test/index.test.ts", "aevo-pos/packages/config/test/config.test.ts"],
+      "currentConsumers": ["legacy tests/config only; no supported Hub launcher"],
+      "replacementCandidate": "Hub :4330 and current app origins",
+      "risk": "incorrect CORS/callback assumptions",
+      "classification": "DEPRECATE_AFTER_MIGRATION",
+      "recommendedLifecycle": "HUB-001; not changed in HUB-000"
+    },
+    {
+      "surface": "Query platform schema",
+      "evidence": ["aevo-hub/supabase/migrations/20260918180000+", "aevo-query-platform skill", "Hub runtime no longer owns query package"],
+      "currentConsumers": ["legacy schema/admin query migrations; no canonical Hub runtime query engine proven"],
+      "replacementCandidate": "versioned Query AST/model registry with app adapters",
+      "risk": "schema residue is mistaken for an active feature; SQL/query bypass risk",
+      "classification": "INVESTIGATE",
+      "recommendedLifecycle": "do not delete schema in HUB-000; decide before query implementation"
+    },
+    {
+      "surface": "Billing writer",
+      "evidence": ["aevo-pos/apps/api/src/app.ts /api/v1/hub/billing/webhook", "aevo-pos/packages/db/src/stripe-billing.ts", "Core only reads public subscriptions in HubDataStore"],
+      "currentConsumers": ["Core billing adapter/webhook", "Admin/Core readers"],
+      "replacementCandidate": "verified billing service/Core projection",
+      "risk": "POS remains de facto cross-app billing authority",
+      "classification": "CORE_BILLING_AUTHORITY",
+      "recommendedLifecycle": "Core owns billing ledger/projection; POS forwards signed events only"
+    },
+    {
+      "surface": "Digital Sign",
+      "evidence": ["aevo-digital-sing own repository/runtime", "Core registry seed only"],
+      "currentConsumers": ["independent product"],
+      "replacementCandidate": "none",
+      "risk": "accidental destructive coupling to Hub migration",
+      "classification": "KEEP_INDEPENDENT",
+      "recommendedLifecycle": "exclude from all Hub batch changes"
+    }
+  ]
+}

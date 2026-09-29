@@ -1,0 +1,84 @@
+{
+  "schema": "aevocado.hub-baseline.events",
+  "inventoryVersion": 1,
+  "batch": "BATCH-HUB-000",
+  "generatedAt": "2026-09-24",
+  "entries": [
+    {
+      "component": "Core outbox",
+      "resource": "aevo_outbox_events",
+      "producer": "Core migration/table exists; concrete publisher not evidenced",
+      "consumer": "none proven in Core code",
+      "enabled": false,
+      "deployed": "schema provisioned only",
+      "deadLetter": "not applicable at table level",
+      "status": "PROVISIONED_NOT_USED",
+      "evidence": ["aevo-core-api/db/migrations/0001_core_authority.sql", "aevo-core-api/src/Aevo.CoreApi"]
+    },
+    {
+      "component": "Legacy public outbox",
+      "resource": "public.outbox_events",
+      "producer": "POS/Hub legacy SQL functions and app domain writes",
+      "consumer": "worker/event path not proven",
+      "enabled": "transitional schema",
+      "deployed": "historical Supabase migrations",
+      "deadLetter": "unknown",
+      "status": "TRANSITIONAL_MULTI_WRITER",
+      "evidence": ["aevo-hub/supabase/migrations/20260916083047_foundation.sql", "aevo-pos/supabase/migrations/*", "aevo-background-worker/src/index.ts"]
+    },
+    {
+      "component": "Pub/Sub domain events",
+      "resource": "aevo-<environment>-domain-events",
+      "producer": "Core/app producer not evidenced",
+      "consumer": "aevo-background-worker /internal/pubsub boundary, persistence disabled",
+      "enabled": false,
+      "deployed": "Terraform provisioned",
+      "deadLetter": "aevo-<environment>-domain-events-dead-letter, max 5 attempts",
+      "status": "PROVISIONED_NOT_USED",
+      "evidence": ["aevo-infrastructure/modules/eventing/main.tf", "aevo-background-worker/src/index.ts:140-158"]
+    },
+    {
+      "component": "Cloud Tasks commands",
+      "resource": "aevo-<environment>-commands",
+      "producer": "not evidenced",
+      "consumer": "background worker command handler not evidenced",
+      "enabled": false,
+      "deployed": "Terraform provisioned",
+      "deadLetter": "retry policy only; explicit DLQ not evidenced",
+      "status": "PROVISIONED_NOT_USED",
+      "evidence": ["aevo-infrastructure/modules/eventing/main.tf"]
+    },
+    {
+      "component": "Application connection probes",
+      "resource": "/internal/probe -> /internal/application-connections/probe",
+      "producer": "aevo-background-worker configured probe target",
+      "consumer": "Core application connection projection",
+      "enabled": "only when token/targets configured",
+      "deployed": "Cloud Run worker resource exists",
+      "deadLetter": "none; request returns 502 on write failure",
+      "status": "ACTIVE_TRANSITIONAL",
+      "evidence": ["aevo-background-worker/src/index.ts:45-125", "aevo-core-api/src/Aevo.CoreApi/Program.cs:1214-1243"]
+    },
+    {
+      "component": "Feed configuration propagation",
+      "resource": "aevo_feed_config_propagations",
+      "producer": "Core FeedConfigDataStore/Admin routes",
+      "consumer": "Core propagation state; downstream propagation not evidenced",
+      "enabled": true,
+      "deployed": "Core migration 0010",
+      "deadLetter": "not evidenced",
+      "status": "ACTIVE_CONTROL_PLANE_PARTIAL",
+      "evidence": ["aevo-core-api/db/migrations/0010_feed_config_control_plane.sql", "aevo-core-api/src/Aevo.CoreApi/Data/FeedConfigDataStore.cs"]
+    },
+    {
+      "component": "Scheduled jobs/cron",
+      "resource": "Cloud Scheduler/cron",
+      "producer": "not evidenced",
+      "consumer": "not evidenced",
+      "enabled": "unknown",
+      "deployed": "not found in inspected Terraform modules",
+      "deadLetter": "unknown",
+      "status": "UNKNOWN"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "aevocado.hub-baseline.infrastructure",
+  "inventoryVersion": 2,
+  "batch": "HUB-017",
+  "generatedAt": "2026-09-25",
+  "entries": [
+    { "component": "Cloudflare Edge Worker", "repository": "aevo-edge-gateway", "consumer": "public /api ingress to Core", "classification": "ACTIVE_REQUIRED", "evidence": ["aevo-edge-gateway/src/index.ts", "aevo-infrastructure/modules/cloudflare/main.tf"] },
+    { "component": "Cloudflare app workers/Vite dev plugin", "repository": "aevo-hub, aevo-admin, aevo-play, aevo-pos, aevo-go", "consumer": "web asset/runtime surfaces and local tunnels", "classification": "ACTIVE_TRANSITIONAL", "evidence": ["Vite configs", "LOCAL_DEVELOPMENT.md"] },
+    { "component": "Cloud Run Core API", "repository": "aevo-core-api/aevo-infrastructure", "consumer": "canonical control-plane API", "classification": "ACTIVE_REQUIRED", "evidence": ["aevo-infrastructure/modules/cloud-run/main.tf", "aevo-core-api/README.md"] },
+    { "component": "Cloud Run Background Worker", "repository": "aevo-background-worker/aevo-infrastructure", "consumer": "probes and future event/task handling", "classification": "ACTIVE_TRANSITIONAL", "evidence": ["aevo-infrastructure/modules/cloud-run/main.tf", "aevo-background-worker/src/index.ts"] },
+    { "component": "Cloud SQL PostgreSQL", "repository": "aevo-infrastructure", "consumer": "Core data and migration target", "classification": "ACTIVE_REQUIRED", "evidence": ["aevo-infrastructure/modules/cloud-sql/main.tf", "aevo-core-api/db/README.md"] },
+    { "component": "Supabase PostgreSQL/Auth", "repository": "aevo-hub, aevo-pos, aevo-play, aevo-accounts", "consumer": "identity provider and app-owned domain tables; Core owns the control-plane migration target", "classification": "ACTIVE_APP_DOMAIN_TRANSITIONAL", "evidence": ["aevo-accounts/src/index.ts", "aevo-core-api/db/migrations/README.md", "aevo-pos/supabase/migrations", "aevo-play/supabase/migrations"] },
+    { "component": "Pub/Sub topic/subscription", "repository": "aevo-infrastructure", "consumer": "worker event intake not durable yet", "classification": "PROVISIONED_NOT_USED", "evidence": ["aevo-infrastructure/modules/eventing/main.tf", "aevo-background-worker/src/index.ts"] },
+    { "component": "Pub/Sub dead-letter topic", "repository": "aevo-infrastructure", "consumer": "dead-letter for worker subscription", "classification": "PROVISIONED_NOT_USED", "evidence": ["aevo-infrastructure/modules/eventing/main.tf"] },
+    { "component": "Cloud Tasks queue", "repository": "aevo-infrastructure", "consumer": "no producer/consumer found", "classification": "PROVISIONED_NOT_USED", "evidence": ["aevo-infrastructure/modules/eventing/main.tf"] },
+    { "component": "Secret Manager", "repository": "aevo-infrastructure", "consumer": "Core/worker runtime secrets and service credentials", "classification": "ACTIVE_REQUIRED", "evidence": ["aevo-infrastructure/modules/secret-manager/main.tf", "aevo-infrastructure/modules/cloud-run/main.tf"] },
+    { "component": "IAM service accounts", "repository": "aevo-infrastructure", "consumer": "core_api, worker, migrate identities", "classification": "ACTIVE_REQUIRED", "evidence": ["aevo-infrastructure/modules/iam/main.tf"] },
+    { "component": "VPC/network", "repository": "aevo-infrastructure", "consumer": "Cloud Run private ranges and Cloud SQL connectivity", "classification": "ACTIVE_REQUIRED", "evidence": ["aevo-infrastructure/modules/network/main.tf", "aevo-infrastructure/modules/cloud-run/main.tf"] },
+    { "component": "Cloudflare DNS", "repository": "aevo-infrastructure", "consumer": "app/account DNS records", "classification": "PROVISIONED_OR_DEPLOYMENT_DEPENDENT", "evidence": ["aevo-infrastructure/modules/cloudflare/main.tf"] },
+    { "component": "Observability module", "repository": "aevo-infrastructure", "consumer": "runtime logs/metrics resource definitions", "classification": "PROVISIONED_USAGE_NOT_VERIFIED", "evidence": ["aevo-infrastructure/modules/observability/main.tf"] },
+    { "component": "BigQuery API", "repository": "aevo-infrastructure", "consumer": "no warehouse dataset/query consumer found in inspected code", "classification": "PROVISIONED_NOT_USED_OR_UNKNOWN", "evidence": ["aevo-infrastructure/envs/nonprod/variables.tf", "aevo-infrastructure/envs/prod/variables.tf"] },
+    { "component": "R2/object storage", "repository": "all inspected repos", "consumer": "no Hub control-plane consumer found", "classification": "UNKNOWN_NOT_EVIDENCED" }
+  ]
+}

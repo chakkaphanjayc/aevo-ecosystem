@@ -1,0 +1,129 @@
+{
+  "schema": "aevocado.hub-baseline.repositories",
+  "inventoryVersion": 1,
+  "batch": "BATCH-HUB-000",
+  "generatedAt": "2026-09-24",
+  "entries": [
+    {
+      "repository": "aevo-hub",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 27, "deleted": 133, "untracked": 1 },
+      "classification": "KEEP_BUT_NARROW",
+      "runtimeOwner": "Hub modern UI",
+      "currentResponsibility": ["organization owner/manager UI", "Core API consumer", "store/app configuration orchestration"],
+      "migrationResponsibility": "historical compatibility source; no supported runtime migration writer",
+      "evidence": ["aevo-hub/README.md", "aevo-hub/apps/hub/app/routes/*", "aevo-hub/supabase/migrations/*"]
+    },
+    {
+      "repository": "aevo-core-api",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 11 },
+      "classification": "KEEP_AND_EXPAND",
+      "runtimeOwner": "Core API and migration-only project",
+      "currentResponsibility": ["app sessions", "authorization", "Hub control-plane routes", "Admin control-plane routes", "Core-owned migrations", "audit and feed configuration"],
+      "migrationResponsibility": "ordered Core migration owner for aevo_* tables and transitional public control-plane objects",
+      "evidence": ["aevo-core-api/README.md", "aevo-core-api/src/Aevo.CoreApi/Program.cs", "aevo-core-api/src/Aevo.CoreApi/HubApiEndpoints.cs", "aevo-core-api/db/migrations/README.md"]
+    },
+    {
+      "repository": "aevo-edge-gateway",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 10 },
+      "classification": "KEEP_BUT_NARROW",
+      "runtimeOwner": "public ingress worker",
+      "currentResponsibility": ["CORS", "request ID", "HMAC forwarding", "health/readiness", "forward all /api/* to Core"],
+      "migrationResponsibility": "none",
+      "evidence": ["aevo-edge-gateway/src/index.ts", "aevo-edge-gateway/README.md"]
+    },
+    {
+      "repository": "aevo-accounts",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 10 },
+      "classification": "KEEP_BUT_NARROW",
+      "runtimeOwner": "identity broker worker",
+      "currentResponsibility": ["provider credential operations", "PKCE/redirect allowlist", "password/recovery", "Core session issue/revoke handoff"],
+      "migrationResponsibility": "none",
+      "evidence": ["aevo-accounts/src/index.ts", "aevo-accounts/README.md"]
+    },
+    {
+      "repository": "aevo-admin",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 12 },
+      "classification": "KEEP_SEPARATE",
+      "runtimeOwner": "privileged platform UI/BFF",
+      "currentResponsibility": ["platform RBAC UI", "application registry UI", "connections", "billing/subscriptions", "audit and Go control-plane views"],
+      "migrationResponsibility": "none; calls Core",
+      "evidence": ["aevo-admin/README.md", "aevo-admin/apps/admin/app/routes/*"]
+    },
+    {
+      "repository": "aevo-contracts",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 9 },
+      "classification": "KEEP_AND_EXPAND",
+      "runtimeOwner": "versioned contract package",
+      "currentResponsibility": ["application codes", "session/access DTOs", "Hub types", "OpenAPI document"],
+      "migrationResponsibility": "none",
+      "evidence": ["aevo-contracts/README.md", "aevo-contracts/src/index.ts", "aevo-contracts/openapi/v1.json"]
+    },
+    {
+      "repository": "aevo-background-worker",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 10 },
+      "classification": "KEEP_BUT_NARROW",
+      "runtimeOwner": "probe/event/task worker",
+      "currentResponsibility": ["health/readiness", "app health probes", "Core probe result callback", "authenticated Pub/Sub boundary scaffold"],
+      "migrationResponsibility": "no schema migration; future inbox/outbox consumer only after implementation",
+      "evidence": ["aevo-background-worker/src/index.ts", "aevo-background-worker/README.md"]
+    },
+    {
+      "repository": "aevo-infrastructure",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 9 },
+      "classification": "KEEP_AND_EXPAND",
+      "runtimeOwner": "Terraform/runtime resource source",
+      "currentResponsibility": ["Cloud Run", "Cloud SQL", "IAM", "Pub/Sub", "Cloud Tasks", "Secret Manager", "Cloudflare", "observability"],
+      "migrationResponsibility": "migration-only service account and deployment infrastructure",
+      "evidence": ["aevo-infrastructure/README.md", "aevo-infrastructure/modules/*", "aevo-infrastructure/scripts/check-migration-ownership.ts"]
+    },
+    {
+      "repository": "aevo-pos",
+      "branch": "main",
+      "gitState": { "dirty": false, "modified": 0, "deleted": 0, "untracked": 0 },
+      "classification": "KEEP_AS_APP_OWNER",
+      "runtimeOwner": "POS operational app/API",
+      "currentResponsibility": ["catalog", "orders", "payments", "cash", "queue", "devices", "staff APIs", "billing adapter"],
+      "migrationResponsibility": "app migrations currently include shared control-plane-shaped tables",
+      "evidence": ["aevo-pos/apps/api/src/app.ts", "aevo-pos/packages/db/*", "aevo-pos/supabase/migrations/*"]
+    },
+    {
+      "repository": "aevo-play",
+      "branch": "production",
+      "gitState": { "dirty": false, "modified": 0, "deleted": 0, "untracked": 0 },
+      "classification": "KEEP_AS_APP_OWNER",
+      "runtimeOwner": "Play booking/venue app/API",
+      "currentResponsibility": ["venues", "courts", "booking", "waitlist", "operating hours", "app-local auth/db adapters"],
+      "migrationResponsibility": "app migrations currently include shared membership/session-shaped tables",
+      "evidence": ["aevo-play/apps/api/src/app.ts", "aevo-play/packages/db/*", "aevo-play/supabase/migrations/*"]
+    },
+    {
+      "repository": "aevo-go",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 19 },
+      "classification": "KEEP_AS_CUSTOMER_SURFACE",
+      "runtimeOwner": "customer web/capacitor surface",
+      "currentResponsibility": ["public discovery", "TraceDee/customer interactions", "customer SSO session", "Vite tunnel surface"],
+      "migrationResponsibility": "none; consumes Core/public contracts",
+      "evidence": ["aevo-go/src/lib/customer-api.ts", "aevo-go/src/lib/sso.ts", "aevo-go/vite.config.ts"]
+    },
+    {
+      "repository": "aevo-digital-sing",
+      "branch": "main",
+      "gitState": { "dirty": true, "modified": 0, "deleted": 0, "untracked": 23 },
+      "classification": "OUT_OF_SCOPE_KEEP_INDEPENDENT",
+      "runtimeOwner": "independent signing product",
+      "currentResponsibility": ["document signing", "Firebase/Firestore/Storage", "its own API and UI"],
+      "migrationResponsibility": "not part of Hub baseline changes",
+      "evidence": ["aevo-digital-sing/README.md", "aevo-digital-sing/src/http/routes.ts"],
+      "excludedFromHubBatch": true
+    }
+  ]
+}

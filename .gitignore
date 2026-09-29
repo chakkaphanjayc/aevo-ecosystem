@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+.bun/
+
+# Build and test artifacts
+test-results/
+playwright-report/
+dist/
+build/
+*.log
+
+# Environment and local configs
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db

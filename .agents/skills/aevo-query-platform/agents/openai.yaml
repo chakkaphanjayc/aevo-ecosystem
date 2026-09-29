@@ -1,0 +1,5 @@
+interface:
+  display_name: "Aevo Universal Data Query"
+  short_description: "AST-driven search, import, and export platform"
+  brand_color: "#2D4A30"
+  default_prompt: "Use $aevo-query-platform to design or implement a tenant-safe query, search, import, or export feature in Aevo."
