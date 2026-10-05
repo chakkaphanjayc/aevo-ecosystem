@@ -38,6 +38,7 @@
     "check:feed:load": "bun run scripts/check-feed-load.ts",
     "benchmark:auth-cache": "bun --env-file=aevo-hub/.env run scripts/benchmark-auth-cache.ts",
     "test:all": "bun run scripts/test-all.ts",
+    "ci:dry-run": "bun run scripts/ci-dry-run.ts",
     "test:integration": "bun run scripts/test-all.ts --integration",
     "test:tenant-security": "bun run scripts/test-tenant-security.ts",
     "sub:init": "git submodule update --init --recursive",

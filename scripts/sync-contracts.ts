@@ -22,12 +22,12 @@ const steps: SyncStep[] = [
   {
     label: "Refresh Hub contract dependency",
     directory: "aevo-hub",
-    args: ["install", "--force", "--offline"]
+    args: ["install", "--prefer-offline"]
   },
   {
     label: "Refresh Admin contract dependency",
     directory: "aevo-admin",
-    args: ["install", "--force", "--offline"]
+    args: ["install", "--prefer-offline"]
   }
 ];
 

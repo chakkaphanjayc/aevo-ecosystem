@@ -1,0 +1,43 @@
+name: Aevo Ecosystem CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  ecosystem-checks:
+    name: All Submodules Verification & Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Restore Core API dependencies
+        run: |
+          dotnet restore aevo-core-api/src/Aevo.CoreApi/Aevo.CoreApi.csproj
+          dotnet restore aevo-core-api/src/Aevo.CoreApi.Migrator/Aevo.CoreApi.Migrator.csproj
+          dotnet restore aevo-core-api/tests/Aevo.CoreApi.Tests/Aevo.CoreApi.Tests.csproj
+
+      - name: Install root dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run complete ecosystem test suite
+        run: bun run test:all
